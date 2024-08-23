@@ -1,0 +1,29 @@
+/* body{
+    display: flex;
+    height: 100vh;
+    border: 2px solid red;
+    justify-content: center;
+    align-items: center;
+} */
+
+.inner-container{
+   // display: grid;
+   // grid-template-columns: repeat(8,1fr);
+   // gap: 5px;
+}
+
+
+.cell--column{
+   // height: 40px;
+   // background-color: white;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(8,1fr);
+    gap: 5px;
+  }
+
+.cell--row{
+    height: 20px;
+    background-color: red;
+    cursor: pointer;
+}
