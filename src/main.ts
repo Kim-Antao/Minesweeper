@@ -1,7 +1,7 @@
 import './style.css'
 
 const generateGrid = () =>{
-    let container = document.querySelector<HTMLDivElement>('.inner-container');
+    let container = document.querySelector<HTMLDivElement>('.container__game-grid');
     
     if(!container ){
         throw new Error ("Encountered issue creating the main grid");

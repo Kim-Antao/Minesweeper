@@ -4,20 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minesweeper</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=nippo@400,500&display=swap" rel="stylesheet">
   </head>
   <body>
-    <header>
+    <header class="game-heading">
       <h1>Minesweeper</h1>
+      <img src="./src/asset/minesweeper_logo.png" alt="">
     </header>
     <main>
-      <div class="outer-container">
-        <div class="game-nav"></div>
+      <div class="container">
+        <div class="container__nav">
           <div>
-            <input id="noOfBombs" type="text">
-            <button id="restartButton">🙂</button>
-            <input id="timerBox" type="text">
+            <label for="level">Level</label>
+            <select name="level" id="level">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="Expert">Expert</option>
+            </select>
           </div>
-          <div class="inner-container">
+          
+          <!--
+          below not a coorect way of using modifiers?
+          cannot have coontainer__help-button inside container__nav
+          correct approach - have a separate class?
+          -->
+          <button class="container__nav--help-button">?</button>
+        </div>
+          <div class="container__nav">
+            <input id="noOfBombs" type="text" class="container__nav--input">
+            <button id="restartButton">🙂</button>
+            <input id="timerBox" type="text" class="container__nav--input">
+          </div>
+          <div class="container__game-grid">
            
         </div>
       </div>
