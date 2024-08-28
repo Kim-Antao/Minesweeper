@@ -2,59 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="src/asset/minesweeper_logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minesweeper</title>
-    <link href="https://api.fontshare.com/v2/css?f[]=nippo@400,500&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=nippo@200,300,400,500&display=swap" rel="stylesheet">
   </head>
   <body>
     <header class="game-heading">
       <h1>Minesweeper</h1>
-      <img src="./src/asset/minesweeper_logo.png" alt="">
+      <img class="game-heading__logo" src="./src/asset/minesweeper_logo.png" alt="silver minesweeper logo">
     </header>
     <main>
       <div class="container">
         <div class="container__nav">
           <div>
-            <label for="level">Level</label>
+            <label for="level">Level:</label>
             <select name="level" id="level">
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="Expert">Expert</option>
             </select>
           </div>
-          
-          <!--
-          below not a correct way of using modifiers?
-          cannot have coontainer__help-button inside container__nav
-          correct approach - have a separate class?
-          -->
-          <button class="container__nav--help-button">?</button>
+          <button class="container__help-button">?</button>
         </div>
-          <div class="container__nav">
-            <input id="noOfBombs" type="text" class="container__nav--input">
-            <button id="restartButton">🙂</button>
-            <input id="timerBox" type="text" class="container__nav--input" value="00:00" readonly>
-          </div>
-          <div class="container__game-grid">
-           
+        <div class="container__nav">
+          <input id="noOfBombs" type="text" class="container__display-box" readonly>
+          <button id="restartButton" class="container__restart-button">🙂</button>
+          <input id="timerBox" type="text" class="container__display-box" value="00:00" readonly>
         </div>
-      </div>
-      
+        <div class="container__game-grid">
+        </div>
+      </div>      
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
-
-<!--
-RULES
-Minesweeper rules are very simple. The board is divided into cells, with mines randomly distributed.
- To win, you need to open all the cells. The number on a cell shows the number of mines adjacent to it. 
- Using this information, you can determine cells that are safe, and cells that contain mines.
- Cells suspected of being mines can be marked with a flag using the right mouse button.
--->
-
-
-<!--
-😵
-💣
--->
