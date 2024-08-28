@@ -8,20 +8,53 @@ const generateGrid = () =>{
     }
 
     for(let i:number =0; i<8; i++){
-        container.innerHTML += '<div class="cell--column"></div>';
-    }
-    let column = document.querySelectorAll<HTMLDivElement>('.cell--column');
+        for(let j:number =0; j<8; j++){
+            
+            container.innerHTML += `<div id="${i}${j}" class="container__game-grid--cell"></div>`;
 
-    column.forEach((col)=>{
-        for(let i:number =0; i<8; i++){
-        col.innerHTML += '<div class="cell--row"></div>';
         }
-    })
+    }
+
+    const noOfMines: number= 10;
+    const minePositions: string[] = [];
+    let randomNumber: number | string;
+    let i: number=0;
+
+    while( i < noOfMines){
+        randomNumber = Math.floor(Math.random()*(8*8-1));
+        randomNumber < 10? randomNumber = "0" + randomNumber.toString(): randomNumber = randomNumber.toString()
+        if(!minePositions.includes(randomNumber)){
+            minePositions.push(randomNumber);
+            i++;   
+        }
+    }
+        console.log(minePositions);
+
+      
 
 }
 
 
 generateGrid();
+
+
+
+
+
+
+
+
+// const bombValue = document.querySelector<HTMLInputElement>("#noOfBombs");
+// const levelSelected = document.querySelector<HTMLSelectElement>("#level");
+
+/* const updateBombValue = (event: Event) =>{
+    if(event.currentTarget === "beginner"){
+
+    }
+}; */
+
+//levelSelected?.addEventListener("select",updateBombValue);
+
 
 // let timer: number = 0;
 // let timerDisplay = document.querySelector<HTMLInputElement>("#timerBox");
@@ -72,7 +105,7 @@ const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
 let secs: number | string = 0;
 let mins: number | string= 0;
 let timeCounter: number = 0;
-let interval;
+let interval: number;
 
 if(!TimeDisplay){
     throw new Error("Unable to find the timer input element");
