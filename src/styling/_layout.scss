@@ -1,67 +1,92 @@
+@use "mixins.scss";
 @import "fonts.scss";
 @import "colors.scss";
 
 body{
     width: 100vw;
     height: 100vh;
-    //margin: auto
-    //align-content: center;
-
+    font-family: $primary-font;
 }
 
 .game-heading{
-//   text-align: center;
-margin-top: 10%;
-  font-family: $primary-font;
+  margin-top: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-img{
-
-  height: 2em;
-  padding-left: 10px;
+  &__logo{
+      height: 2em;
+      padding-left: 10px;
+    }
 }
 
 .container{
   margin: auto;
   width: 70vw;
-  //border: 1px solid $primary-color;
   padding: 10px;
-  background-color: #292929d9;
+  background-color: $secondary-background-color;
   box-shadow: 0px 0px 12px 2px black;
+  font-size: 1em;
 
   &__nav{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8%;
-
-    &--help-button{
-     border-radius: 50%;
-     font-family: $primary-font;     
-    }
-
-    &--input{
-      width: 20vw;
-    }
+    margin-bottom: 8%;  
   }
-}
 
-.cell--column{
-    margin-bottom: 5px;
+  &__help-button{
+    @include mixins.default-button;
+    border-radius: 50%;
+    font-family: $primary-font;     
+    font-size: 1em;
+  }
+
+  &__display-box{
+    text-align: center;
+    font-size: 1em;
+    font-family: $primary-font;
+    width: 20vw;
+    box-shadow: inset 0px 0px rgba(0,0,0,0.8);
+  }
+  
+  &__restart-button{
+    @include mixins.default-button;
+    font-size: large;
+  }
+
+  &__game-grid{
     display: grid;
     grid-template-columns: repeat(8,1fr);
     gap: 5px;
   }
-
-.cell--row{
+  
+  &__cell{
     height: 20px;
-    // color: rgba(255, 255, 255, 0.87);
-    
-    background-color:rgba(255, 255, 255, 0.87);
-    //border: 0.5px solid white;
-    box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
-   // box-shadow: -2.5px -2.5px green;
-    cursor: pointer;
+    @include mixins.default-button;
+  }
+
+  &__result{
+    display: none;
+    position: absolute;
+    top: 40%;
+    background-color: black;
+    width: 100vw;
+    left: 0;
+    text-align: center;
+    height: 10%;
+    color: red;
+    align-content: center;
+
+
+
+  }
+
+  &__result:active{
+    animation: fade-in 1s;
+  }
+
+}
+
+#level{
+  font-family: $primary-font;
 }

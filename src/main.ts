@@ -14,6 +14,7 @@ let randomNumber: number | string;
 //let checks: number;
 let i: number=0;
 let isTimerOn = false;
+let isResultDisplayed = false;
 
 // const allPositions: string[] = Array.from({length:8},()=>Array(8).fill("safe")) as string;
 
@@ -45,19 +46,6 @@ for(i =0; i < noOfCells ; i++){
     cell.classList.add(allPositions[i]);
 }
 
-//user clicks on cell
-    // if array [id of div clicked] === "mine"
-            // game lost
-            // display message 
-            // stop timer
-            // show all hidden mines
-    //if  [id of div clicked] < noOfCols && [id of div clicked]+noOfCols === "mine"
-        //total++;
-    // bottom row: if [id of div clicked] > length of array 
-        //
-    // left column
-    // right column
-    // all other cell
 
         
 
@@ -104,20 +92,67 @@ cells.forEach((cell)=>{
   // console.log("event listener called")
 });
  */
+const resultDisplay = document.querySelector<HTMLHeadingElement>(".container__result");
+
+
 restartButton?.addEventListener('click', ()=>{
+    resetTimer();
+    isTimerOn = false;
+    if (isResultDisplayed && resultDisplay){
+        console.log("reset")
+
+        resultDisplay.style.display = "none";
+
+    }
+})
+
+const resetTimer = () =>{
     clearInterval(interval);
     secs = 0;
     mins = 0;
     timeCounter = 0;
     TimeDisplay.value = "00:00";
-    isTimerOn = false;
-})
-
+}
 
 const handleCellClicked = (cellClicked: Event) =>{
- console.log(cellClicked.currentTarget);
- 
- //(cellClicked.currentTarget as HTMLDivElement).innerText = "here";
+ //console.log(cellClicked.currentTarget);
+    const safeCell = (cellClicked.currentTarget as HTMLDivElement).className.includes("safe");
+    const mineCell = (cellClicked.currentTarget as HTMLDivElement).className.includes("mine");
+   
+    if(mineCell){
+        if(!resultDisplay){
+            throw new Error ("Unable to locate h3 element to display result");
+        }
+/////////////////////// reveal all bombs
+/////////////////////// disable click function on cells
+        resultDisplay.innerText = "GAME LOST!"
+        resultDisplay.style.display = "block";
+        isResultDisplayed = true;
+        resetTimer();
+
+    }
+   
+//user clicks on cell
+    // if array [id of div clicked] === "mine"
+            // game lost
+            // display message 
+            // stop timer
+            // show all hidden mines
+    //if  [id of div clicked] < noOfCols && [id of div clicked]+noOfCols === "mine"
+        //total++;
+    // bottom row: if [id of div clicked] > length of array 
+        //
+    // left column
+    // right column
+    // all other cell
+
+
+    if(safeCell){
+
+    }
+
+    //console.log(cellClicked.currentTarget, cellType);
+    
 };
 
 
