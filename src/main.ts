@@ -1,46 +1,124 @@
 import './style.css'
 
-const generateGrid = () =>{
-    let container = document.querySelector<HTMLDivElement>('.container__game-grid');
-    
-    if(!container ){
-        throw new Error ("Encountered issue creating the main grid");
+let container = document.querySelector<HTMLDivElement>('.container__game-grid');
+
+// to be changed later - dynamically set values based on level chosen
+const noOfMines: number= 10;
+const noOfRows: number =8;
+const noOfCols: number =8;
+///////////////////////////////////////////////////////
+const noOfCells: number = noOfRows*noOfCols;
+const minePositions: number[] = [];
+let allPositions: string[] = new Array(noOfCells).fill("safe");
+let randomNumber: number | string;
+//let checks: number;
+let i: number=0;
+let isTimerOn = false;
+
+// const allPositions: string[] = Array.from({length:8},()=>Array(8).fill("safe")) as string;
+
+if(!container ){
+    throw new Error ("Encountered issue locating the main grid");
+}
+
+for(i=0; i<(noOfCells); i++){    
+    container.innerHTML += `<div id="${i}" class="container__cell"></div>`;
+}
+
+const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
+
+i = 0;    
+while( i < noOfMines){
+    randomNumber = Math.floor(Math.random()*(noOfCells-1));
+  //  checks = randomNumber;
+  //  randomNumber < 10? randomNumber = "0" + randomNumber.toString(): randomNumber = randomNumber.toString()
+  if(!minePositions.includes(randomNumber)){
+        minePositions.push(randomNumber);
+        allPositions[randomNumber] = "mine";    
+        i++;   
     }
-
-    for(let i:number =0; i<8; i++){
-        for(let j:number =0; j<8; j++){
-            
-            container.innerHTML += `<div id="${i}${j}" class="container__game-grid--cell"></div>`;
-
-        }
-    }
-
-    const noOfMines: number= 10;
-    const minePositions: string[] = [];
-    let randomNumber: number | string;
-    let i: number=0;
-
-    while( i < noOfMines){
-        randomNumber = Math.floor(Math.random()*(8*8-1));
-        randomNumber < 10? randomNumber = "0" + randomNumber.toString(): randomNumber = randomNumber.toString()
-        if(!minePositions.includes(randomNumber)){
-            minePositions.push(randomNumber);
-            i++;   
-        }
-    }
-        console.log(minePositions);
-
-      
 
 }
 
+for(i =0; i < noOfCells ; i++){
+    let cell = (document.getElementById(`${i}`) as HTMLDivElement);
+    cell.classList.add(allPositions[i]);
+}
 
-generateGrid();
+//user clicks on cell
+    // if array [id of div clicked] === "mine"
+            // game lost
+            // display message 
+            // stop timer
+            // show all hidden mines
+    //if  [id of div clicked] < noOfCols && [id of div clicked]+noOfCols === "mine"
+        //total++;
+    // bottom row: if [id of div clicked] > length of array 
+        //
+    // left column
+    // right column
+    // all other cell
+
+        
+
+console.log(cells);
+const restartButton = document.querySelector<HTMLButtonElement>("#restartButton");
+//const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
+const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
+
+let secs: number | string = 0;
+let mins: number | string= 0;
+let timeCounter: number = 0;
+let interval: number;
+
+if(!TimeDisplay){
+    throw new Error("Unable to find the timer input element");
+}
+
+const updateTime = () =>{
+   // console.log("here");
+   isTimerOn = true;
+    secs = Math.floor(timeCounter % 60);
+    mins = Math.floor((timeCounter/60)%60);
+    if (secs < 10){
+        secs = "0" + secs.toString();
+    }
+    if(mins < 10){
+        mins = "0" + mins.toString();
+    }
+    TimeDisplay.value = `${mins}:${secs}`;
+    timeCounter++;
+
+}
+
+cells.forEach((cell)=>{
+    cell.addEventListener('click', (cellClicked: Event) =>{
+
+        console.log("cell clicked");
+        if(!isTimerOn) interval = setInterval(updateTime,1000);
+        handleCellClicked(cellClicked);
+    })
+})
+/* startButton?.addEventListener('click',()=>{
+   interval = setInterval(updateTime,1000);
+  // console.log("event listener called")
+});
+ */
+restartButton?.addEventListener('click', ()=>{
+    clearInterval(interval);
+    secs = 0;
+    mins = 0;
+    timeCounter = 0;
+    TimeDisplay.value = "00:00";
+    isTimerOn = false;
+})
 
 
-
-
-
+const handleCellClicked = (cellClicked: Event) =>{
+ console.log(cellClicked.currentTarget);
+ 
+ //(cellClicked.currentTarget as HTMLDivElement).innerText = "here";
+};
 
 
 
@@ -76,6 +154,9 @@ generateGrid();
 // }
 
 
+
+
+
 /* let cells = document.querySelectorAll<HTMLDivElement>(".cell--row");
 let restartBtn = document.querySelector<HTMLButtonElement>("#restartButton");
 
@@ -97,45 +178,3 @@ const checkTimer = () =>{
 const displayTime= ()=>{
  */
 //}
-
-const restartButton = document.querySelector<HTMLButtonElement>("#restartButton");
-const startButton = document.querySelector<HTMLDivElement>(".container__game-grid");
-const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
-
-let secs: number | string = 0;
-let mins: number | string= 0;
-let timeCounter: number = 0;
-let interval: number;
-
-if(!TimeDisplay){
-    throw new Error("Unable to find the timer input element");
-}
-
-const updateTime = () =>{
-    console.log("here");
-    secs = Math.floor(timeCounter % 60);
-    mins = Math.floor((timeCounter/60)%60);
-    if (secs < 10){
-        secs = "0" + secs.toString();
-    }
-    if(mins < 10){
-        mins = "0" + mins.toString();
-    }
-    TimeDisplay.value = `${mins}:${secs}`;
-    timeCounter++;
-
-}
-
-
-startButton?.addEventListener('click',()=>{
-   interval = setInterval(updateTime,1000);
-  // console.log("event listener called")
-});
-
-restartButton?.addEventListener('click', ()=>{
-    clearInterval(interval);
-    secs = 0;
-    mins = 0;
-    timeCounter = 0;
-    TimeDisplay.value = "00:00";
-})
