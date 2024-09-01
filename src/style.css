@@ -1,17 +1,16 @@
 body {
   width: 100vw;
   height: 100vh;
+  font-family: "Nippo", sans-serif;
 }
 
 .game-heading {
   margin-top: 10%;
-  font-family: "Nippo", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-img {
+.game-heading__logo {
   height: 2em;
   padding-left: 10px;
 }
@@ -22,32 +21,78 @@ img {
   padding: 10px;
   background-color: rgba(41, 41, 41, 0.8509803922);
   box-shadow: 0px 0px 12px 2px black;
+  font-size: 1em;
+  /*   &__result:active{
+      animation: fade-in 1s;
+    } */
 }
 .container__nav {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8%;
 }
-.container__nav--help-button {
-  border-radius: 50%;
-  font-family: "Nippo", sans-serif;
-}
-.container__nav--input {
-  width: 20vw;
-}
-
-.cell--column {
-  margin-bottom: 5px;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 5px;
-}
-
-.cell--row {
-  height: 20px;
+.container__help-button {
   background-color: rgba(255, 255, 255, 0.87);
   box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
   cursor: pointer;
+  text-align: center;
+  border-radius: 50%;
+  font-family: "Nippo", sans-serif;
+  font-size: 1em;
+}
+.container__display-box {
+  text-align: center;
+  font-size: 1em;
+  font-family: "Nippo", sans-serif;
+  width: 20vw;
+  box-shadow: inset 0px 0px rgba(0, 0, 0, 0.8);
+}
+.container__restart-button {
+  background-color: rgba(255, 255, 255, 0.87);
+  box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
+  cursor: pointer;
+  text-align: center;
+  font-size: large;
+}
+.container__game-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--noOfCols), 1fr);
+  gap: 5px;
+}
+.container__cell {
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.87);
+  box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
+  cursor: pointer;
+  text-align: center;
+}
+.container__cell--clicked {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: rgba(100, 100, 100, 0.87);
+  box-shadow: inset 1px 1px 1px black, inset -1px -1px 1px white;
+}
+.container__result {
+  display: none;
+  position: absolute;
+  top: 40%;
+  background-color: black;
+  width: 100vw;
+  left: 0;
+  text-align: center;
+  height: 10%;
+  align-content: center;
+}
+.container__result--lost {
+  display: block;
+  color: red;
+}
+.container__result--won {
+  display: block;
+  color: green;
+}
+
+#level {
+  font-family: "Nippo", sans-serif;
 }
 
 :root {

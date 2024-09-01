@@ -1,25 +1,9 @@
 import './style.css'
 
 const container = document.querySelector<HTMLDivElement>('.container__game-grid');
-
-// to be changed later - dynamically set values based on level chosen
-const noOfMines: number= 10;
-const noOfRows: number =8;
-const noOfCols: number =8;
-///////////////////////////////////////////////////////
-const noOfCells: number = noOfRows*noOfCols;
-const minePositions: number[] = [];
-let allPositions: string[];
-let randomNumber: number | string;
-//let checks: number;
-let i: number=0;
-let isTimerOn = false;
-let isResultDisplayed = false;
-
-
 const resultDisplay = document.querySelector<HTMLHeadingElement>(".container__result");
+const level = document.querySelector<HTMLSelectElement>('#level');
 
-// const allPositions: string[] = Array.from({length:8},()=>Array(8).fill("safe")) as string;
 
 if(!container ){
     throw new Error ("Encountered issue locating the main grid");
@@ -27,10 +11,71 @@ if(!container ){
 if(!resultDisplay){
     throw new Error ("Unable to locate h3 element to display result");
 }
+if(!level){
+    throw new Error ("Element for level selection cannot be located");
+}
+
+const minePositions: number[] = [];
+let allPositions: string[];
+let randomNumber: number;
+//let checks: number;
+let i: number=0;
+let isTimerOn = false;
+let isResultDisplayed = false;
+// let levelSelected = "beginner";
+let noOfMines: number= 10;
+let noOfRows: number =8;
+let noOfCols: number =8;
+
+let noOfCells: number = noOfRows*noOfCols;
+let levelSelected: string = level.value;
+
+
+
+
+
+level.addEventListener('change', ()=>{
+    levelSelected = level.value;
+    generateGameGrid();
+})
 
 
 const generateGameGrid = () =>{
+
+    container.innerHTML= "";
+
+    if(resultDisplay.classList.contains("container__result--lost")){
+        resultDisplay.classList.remove("container__result--lost");
+    }else if(resultDisplay.classList.contains("container__result--won")){
+        resultDisplay.classList.remove("container__result--won");
+    }
+
+    if(levelSelected == "beginner"){
+        noOfRows = 8;
+        noOfCols = 8;
+        noOfMines = 10;
+       
+
+        
+    }else if(levelSelected == "intermediate"){
+        noOfRows = 12;
+        noOfCols = 12;
+        noOfMines = 24;
+        // generateGameGrid();
+
+    }else if(levelSelected == "expert"){
+        noOfRows = 18;
+        noOfCols = 18;
+        noOfMines = 60;
+        
+        // generateGameGrid();
+    }
+    document.documentElement.style.setProperty('--noOfCols', noOfCols.toString());
+    noOfCells = noOfRows*noOfCols;
+    console.log(noOfCells);
+
     allPositions = new Array(noOfCells).fill("safe");
+
     minePositions.length = 0;
     for(i=0; i<(noOfCells); i++){    
         container.innerHTML += `<div id="${i}" class="container__cell"></div>`;
@@ -40,8 +85,6 @@ const generateGameGrid = () =>{
     i = 0;    
     while( i < noOfMines){
         randomNumber = Math.floor(Math.random()*(noOfCells-1));
-      //  checks = randomNumber;
-      //  randomNumber < 10? randomNumber = "0" + randomNumber.toString(): randomNumber = randomNumber.toString()
       if(!minePositions.includes(randomNumber)){
             minePositions.push(randomNumber);
             allPositions[randomNumber] = "mine";    
@@ -86,49 +129,6 @@ const generateGameGrid = () =>{
             if(i>(noOfCols-1) && gridEdge != (noOfCols-1) && (allPositions[i-noOfCols+1]=="mine")){minesAdjacent++;}
     
            
-    
-    /* 
-            if(i>noOfCols && i<bottomRow && (gridEdge!=0) && (gridEdge!= (noOfCols-1))){   
-                if(allPositions[i-noOfCols-1]=="mine"){minesAdjacent++;}
-                if(allPositions[i-noOfCols+1]=="mine"){minesAdjacent++;}
-                // if(allPositions[i+noOfCols-1]=="mine"){minesAdjacent++;}
-                if(allPositions[i+noOfCols+1]=="mine"){minesAdjacent++;}
-            }
-             */
-            /* 
-            //check if the cells in the top row have a mine on its left 
-            if(i<noOfCols && i>1 && allPositions[i-1]=="mine"){minesAdjacent++;}
-            //check if the cells in the top row have a mine on its right 
-            if(i<(noOfCols-1) && allPositions[i+1]=="mine"){minesAdjacent++;}
-            
-            //check if the cells on the left edge have a mine above it
-            if(i>noOfCols &&(gridEdge ==0) && allPositions[i-noOfRows]=="mine"){minesAdjacent++;}
-            //check if the cells on the left edge have a mine below it
-            if(i<bottomRow &&(gridEdge ==0) && allPositions[i+noOfRows]=="mine"){minesAdjacent++;}
-            
-            // check if the cells on the right edge have a mine below it
-            if(i<noOfCells-1 &&(gridEdge == (noOfCols-1)) && allPositions[i+noOfRows]=="mine"){minesAdjacent++;}
-            // check if the cells on the right edge have a mine above it
-            if(i<noOfCols &&(gridEdge == (noOfCols-1)) && allPositions[i-noOfRows]=="mine"){minesAdjacent++;}
-            
-            // check if the cell on the bottom row have a mine on its left 
-            if(i>(bottomRow) && allPositions[i-1]=="mine"){minesAdjacent++;}
-            //check if the cells  on the bottom row have a mine on its right 
-            if(i>(bottomRow-1) &&(i%noOfCols == (noOfCols-1)) && allPositions[i+1]=="mine"){minesAdjacent++;}
-           
-            // check if the cell in the middle have mines around it
-            // not top row, not bottom row,  not on the left,   not on the right edge
-            if(i>noOfCols && i<bottomRow && (gridEdge!=0) && (gridEdge!= (noOfCols-1))){
-                if(allPositions[i-1]=="mine"){minesAdjacent++;}
-                if(allPositions[i+1]=="mine"){minesAdjacent++;}
-                if(allPositions[i-noOfCols]=="mine"){minesAdjacent++;}
-                if(allPositions[i+noOfCols]=="mine"){minesAdjacent++;}
-                if(allPositions[i-noOfCols-1]=="mine"){minesAdjacent++;}
-                if(allPositions[i-noOfCols+1]=="mine"){minesAdjacent++;}
-                if(allPositions[i+noOfCols-1]=="mine"){minesAdjacent++;}
-                if(allPositions[i+noOfCols+1]=="mine"){minesAdjacent++;}
-            }
-     */
             cell.setAttribute("data-mines-around", minesAdjacent.toString());
     
         }
@@ -190,7 +190,7 @@ const updateTime = () =>{
 restartButton?.addEventListener('click', ()=>{
     resetTimer();
     isTimerOn = false;
-    container.innerHTML= "";
+    // 
     ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🙂";
     generateGameGrid();
     if (isResultDisplayed && resultDisplay){
@@ -275,7 +275,8 @@ const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDi
                     }
                 })
                 resultDisplay.innerText = "GAME LOST!"
-                resultDisplay.style.display = "block";
+             //   resultDisplay.style.display = "block";
+                resultDisplay.classList.add("container__result--lost");
                ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "😵";
                 isResultDisplayed = true;
                 stopTimer();
@@ -309,8 +310,10 @@ const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDi
                if(totalSafeCellClicked == (noOfCells-noOfMines)){
                // console.log("All cleared")
                resultDisplay.innerText = "GAME WON"
-               resultDisplay.style.display = "block";
-              ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🥳";
+           //    resultDisplay.style.display = "block";
+               resultDisplay.classList.add("container__result--won");
+             
+               ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🥳";
                isResultDisplayed = true;
                stopTimer();
                return;
