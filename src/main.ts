@@ -138,7 +138,7 @@ cells.forEach((cell)=>{
     cell.addEventListener('click', (cellClicked: Event) =>{
 
         if(!isTimerOn) interval = setInterval(updateTime,1000);
-        handleCellClicked(cellClicked, cells);
+        handleCellClicked(cellClicked.currentTarget as HTMLDivElement, cells);
     })
 })  
 }
@@ -191,6 +191,7 @@ restartButton?.addEventListener('click', ()=>{
     resetTimer();
     isTimerOn = false;
     container.innerHTML= "";
+    ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🙂";
     generateGameGrid();
     if (isResultDisplayed && resultDisplay){
         console.log("reset")
@@ -215,15 +216,55 @@ const resetTimer = () =>{
     TimeDisplay.value = "00:00";
 }
 
-const handleCellClicked = (cellClicked: Event, cells: NodeListOf<HTMLDivElement>) =>{
+const handleEmptyCellClicked = (cellClicked, cells) => {
+    const currentLocation: number = parseInt(cellClicked.getAttribute("id") as string);
+                let newLocation: number = 0;
+                const gridEdge:number = currentLocation%noOfCols ;
+                const bottomRow: number = noOfRows * (noOfCols-1);
+    if(gridEdge!=0) {
+        newLocation = currentLocation-1;
+        const newCell = document.getElementById(newLocation.toString()) as HTMLDivElement;
+        handleCellClicked(newCell,cells);
+    }
+
+    if(gridEdge!=(noOfCols-1)){
+        newLocation = currentLocation+1;
+        const newCell = document.getElementById(newLocation.toString()) as HTMLDivElement;
+        handleCellClicked(newCell,cells);
+    }
+    if(currentLocation>(noOfCols-1)){
+        newLocation = currentLocation-noOfCols;
+        const newCell = document.getElementById(newLocation.toString()) as HTMLDivElement;
+        handleCellClicked(newCell,cells);
+    }
+        
+    if(currentLocation<bottomRow){
+        newLocation = currentLocation+noOfCols;
+        const newCell = document.getElementById(newLocation.toString()) as HTMLDivElement;
+        handleCellClicked(newCell,cells);
+    }
+}
+
+
+const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDivElement>) =>{
 //console.log(cellClicked.currentTarget);
 // Do nothing if the game results are already displayed
     if(!isResultDisplayed){
-        const isMineCell = (cellClicked.currentTarget as HTMLDivElement).className.includes("mine");
-        const alreadyClicked = (cellClicked.currentTarget as HTMLDivElement).className.includes("container__cell--clicked");
+        const isMineCell = cellClicked.className.includes("mine");
+        const alreadyClicked = cellClicked.className.includes("container__cell--clicked");
+        const allClickedCells = document.querySelectorAll(".container__cell--clicked");
+        let totalSafeCellClicked: number = 0;
+        // let zeroSafeCell: boolean = false;
+       
+        // cells.forEach((cell)=>{
+        //     if (cell.classList.contains("safe")&& alreadyClicked){
+        //      zeroSafeCell = true;
+        //     }
+
+        //  })
 
         if(!alreadyClicked){
-            console.log("cell clicked ", cellClicked.currentTarget);
+           // console.log("cell clicked ", cellClicked.currentTarget);
 
             if(isMineCell){
                 
@@ -235,18 +276,73 @@ const handleCellClicked = (cellClicked: Event, cells: NodeListOf<HTMLDivElement>
                 })
                 resultDisplay.innerText = "GAME LOST!"
                 resultDisplay.style.display = "block";
+               ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "😵";
                 isResultDisplayed = true;
                 stopTimer();
                 // is the below required to stop the function
                 return;
         
             }else{
+                const totalMines: number=  parseInt(cellClicked.getAttribute("data-mines-around") as string);
+                // console.log(totalMines)
+               if (totalMines!=0) {
+                cellClicked.innerText= totalMines.toString();
+                cellClicked.classList.add("container__cell--clicked");
+               
+
+               } else{
+              //  console.log("0 mine adjacent")
+              cellClicked.classList.add("container__cell--clicked");
                 
-                (cellClicked.currentTarget as HTMLDivElement).innerText=  (cellClicked.currentTarget as HTMLDivElement).getAttribute("data-mines-around") as string;
-                (cellClicked.currentTarget as HTMLDivElement).classList.add("container__cell--clicked");
+                // setTimeout(handleEmptyCellClicked(cellClicked, cells),10)
+                handleEmptyCellClicked(cellClicked, cells);
+               }
+               
+               cells.forEach((cell)=>{
+                if(cell.classList.contains("safe")){
+                    if(cell.classList.contains("container__cell--clicked")){
+                        totalSafeCellClicked++;
+                    }
+                }
+               })
+
+               if(totalSafeCellClicked == (noOfCells-noOfMines)){
+               // console.log("All cleared")
+               resultDisplay.innerText = "GAME WON"
+               resultDisplay.style.display = "block";
+              ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🥳";
+               isResultDisplayed = true;
+               stopTimer();
+               return;
+               }
+
+               
+                }
             }
+
+         /*    cells.forEach((cell)=>{
+                if (cell.classList.contains("safe")&& allClickedCells){
+                    // console.log("In the loop")
+                    totalSafeCellClicked++;
+                }
+                console.log(totalSafeCellClicked)
+                
+             })
+             if(totalSafeCellClicked == noOfCells-noOfMines){
+                resultDisplay.innerText = "GAMe WON!"
+                resultDisplay.style.display = "block";
+               //( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "";
+                isResultDisplayed = true;
+                stopTimer();
+                // is the below required to stop the function
+                return;
+        
+        } */
+    
+    
         }
-    }
+
+       
 //user clicks on cell
     // if array [id of div clicked] === "mine"
            
@@ -264,8 +360,13 @@ const handleCellClicked = (cellClicked: Event, cells: NodeListOf<HTMLDivElement>
     
 };
 
-
-
+// END OF HANDLE CELL CLICKED
+/* const checkAdjacentCell = (currentCell: HTMLDivElement)=>{
+    const currentLocation:number = parseInt(currentCell.getAttribute("id") as string);
+    const gridEdge:number = currentLocation%noOfCols ;
+    const bottomRow: number = noOfRows * (noOfCols-1);
+    if(gridEdge!=0)
+} */
 // const bombValue = document.querySelector<HTMLInputElement>("#noOfBombs");
 // const levelSelected = document.querySelector<HTMLSelectElement>("#level");
 
