@@ -3,34 +3,43 @@ import './style.css'
 const container = document.querySelector<HTMLDivElement>('.container__game-grid');
 const resultDisplay = document.querySelector<HTMLHeadingElement>(".container__result");
 const level = document.querySelector<HTMLSelectElement>('#level');
+const mineDisplay = document.querySelector<HTMLInputElement>('#noOfBombs');
+const restartButton = document.querySelector<HTMLButtonElement>("#restartButton");
+const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
 
 
 if(!container ){
     throw new Error ("Encountered issue locating the main grid");
 }
 if(!resultDisplay){
-    throw new Error ("Unable to locate h3 element to display result");
+    throw new Error ("Encountered issue locating the h3 element to display result");
 }
 if(!level){
-    throw new Error ("Element for level selection cannot be located");
+    throw new Error ("Encountered issue locating the element for level selection");
 }
+if(!mineDisplay){
+    throw new Error ("Encountered issue locating the element to display number of mines");
+}
+if(!TimeDisplay){
+    throw new Error("Encountered issue locating the timer input element");
+}
+
 
 const minePositions: number[] = [];
 let allPositions: string[];
 let randomNumber: number;
-//let checks: number;
 let i: number=0;
 let isTimerOn = false;
 let isResultDisplayed = false;
-// let levelSelected = "beginner";
 let noOfMines: number= 10;
 let noOfRows: number =8;
 let noOfCols: number =8;
-
-let noOfCells: number = noOfRows*noOfCols;
+let noOfCells: number;
 let levelSelected: string = level.value;
-
-
+let secs: number | string = 0;
+let mins: number | string= 0;
+let timeCounter: number = 0;
+let interval: number;
 
 
 
@@ -46,41 +55,37 @@ const generateGameGrid = () =>{
 
     if(resultDisplay.classList.contains("container__result--lost")){
         resultDisplay.classList.remove("container__result--lost");
+        isResultDisplayed=false;
     }else if(resultDisplay.classList.contains("container__result--won")){
         resultDisplay.classList.remove("container__result--won");
+        isResultDisplayed=false;
     }
 
     if(levelSelected == "beginner"){
         noOfRows = 8;
         noOfCols = 8;
         noOfMines = 10;
-       
-
-        
     }else if(levelSelected == "intermediate"){
         noOfRows = 12;
         noOfCols = 12;
         noOfMines = 24;
-        // generateGameGrid();
-
     }else if(levelSelected == "expert"){
         noOfRows = 18;
         noOfCols = 18;
         noOfMines = 60;
-        
-        // generateGameGrid();
     }
+    
     document.documentElement.style.setProperty('--noOfCols', noOfCols.toString());
-    noOfCells = noOfRows*noOfCols;
-    console.log(noOfCells);
+    document.documentElement.style.setProperty('--level',levelSelected);
 
+    noOfCells = noOfRows*noOfCols;
+    mineDisplay.value = noOfMines.toString();
     allPositions = new Array(noOfCells).fill("safe");
 
     minePositions.length = 0;
     for(i=0; i<(noOfCells); i++){    
         container.innerHTML += `<div id="${i}" class="container__cell"></div>`;
     }
-    
     
     i = 0;    
     while( i < noOfMines){
@@ -90,14 +95,12 @@ const generateGameGrid = () =>{
             allPositions[randomNumber] = "mine";    
             i++;   
         }
-    
     }
 
     for(i =0; i < noOfCells ; i++){
         let cell = (document.getElementById(`${i}`) as HTMLDivElement);
         cell.classList.add(allPositions[i]);
     }
-    
     
     for(i=0; i<noOfCells; i++){
         let minesAdjacent: number =0;
@@ -134,36 +137,20 @@ const generateGameGrid = () =>{
         }
     }
     const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
-cells.forEach((cell)=>{
-    cell.addEventListener('click', (cellClicked: Event) =>{
+    cells.forEach((cell)=>{
+        cell.addEventListener('click', (cellClicked: Event) =>{
 
-        if(!isTimerOn) interval = setInterval(updateTime,1000);
-        handleCellClicked(cellClicked.currentTarget as HTMLDivElement, cells);
-    })
-})  
+            if(!isTimerOn) interval = setInterval(updateTime,1000);
+            handleCellClicked(cellClicked.currentTarget as HTMLDivElement, cells);
+        })
+    })  
 }
 
 generateGameGrid();
 
 
- 
-
-//console.log(cells);
-const restartButton = document.querySelector<HTMLButtonElement>("#restartButton");
-//const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
-const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
-
-let secs: number | string = 0;
-let mins: number | string= 0;
-let timeCounter: number = 0;
-let interval: number;
-
-if(!TimeDisplay){
-    throw new Error("Unable to find the timer input element");
-}
 
 const updateTime = () =>{
-   // console.log("here");
    isTimerOn = true;
     secs = Math.floor(timeCounter % 60);
     mins = Math.floor((timeCounter/60)%60);
@@ -178,19 +165,10 @@ const updateTime = () =>{
 
 }
 
-//console.log(cells);
-
-/* startButton?.addEventListener('click',()=>{
-   interval = setInterval(updateTime,1000);
-  // console.log("event listener called")
-});
- */
-
 
 restartButton?.addEventListener('click', ()=>{
     resetTimer();
     isTimerOn = false;
-    // 
     ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🙂";
     generateGameGrid();
     if (isResultDisplayed && resultDisplay){
@@ -247,24 +225,11 @@ const handleEmptyCellClicked = (cellClicked, cells) => {
 
 
 const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDivElement>) =>{
-//console.log(cellClicked.currentTarget);
-// Do nothing if the game results are already displayed
-    if(!isResultDisplayed){
+if(!isResultDisplayed){
         const isMineCell = cellClicked.className.includes("mine");
         const alreadyClicked = cellClicked.className.includes("container__cell--clicked");
-        const allClickedCells = document.querySelectorAll(".container__cell--clicked");
         let totalSafeCellClicked: number = 0;
-        // let zeroSafeCell: boolean = false;
-       
-        // cells.forEach((cell)=>{
-        //     if (cell.classList.contains("safe")&& alreadyClicked){
-        //      zeroSafeCell = true;
-        //     }
-
-        //  })
-
         if(!alreadyClicked){
-           // console.log("cell clicked ", cellClicked.currentTarget);
 
             if(isMineCell){
                 
@@ -275,27 +240,19 @@ const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDi
                     }
                 })
                 resultDisplay.innerText = "GAME LOST!"
-             //   resultDisplay.style.display = "block";
                 resultDisplay.classList.add("container__result--lost");
                ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "😵";
                 isResultDisplayed = true;
                 stopTimer();
-                // is the below required to stop the function
                 return;
         
             }else{
                 const totalMines: number=  parseInt(cellClicked.getAttribute("data-mines-around") as string);
-                // console.log(totalMines)
                if (totalMines!=0) {
                 cellClicked.innerText= totalMines.toString();
                 cellClicked.classList.add("container__cell--clicked");
-               
-
                } else{
-              //  console.log("0 mine adjacent")
               cellClicked.classList.add("container__cell--clicked");
-                
-                // setTimeout(handleEmptyCellClicked(cellClicked, cells),10)
                 handleEmptyCellClicked(cellClicked, cells);
                }
                
@@ -308,9 +265,7 @@ const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDi
                })
 
                if(totalSafeCellClicked == (noOfCells-noOfMines)){
-               // console.log("All cleared")
                resultDisplay.innerText = "GAME WON"
-           //    resultDisplay.style.display = "block";
                resultDisplay.classList.add("container__result--won");
              
                ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🥳";
@@ -323,106 +278,7 @@ const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDi
                 }
             }
 
-         /*    cells.forEach((cell)=>{
-                if (cell.classList.contains("safe")&& allClickedCells){
-                    // console.log("In the loop")
-                    totalSafeCellClicked++;
-                }
-                console.log(totalSafeCellClicked)
-                
-             })
-             if(totalSafeCellClicked == noOfCells-noOfMines){
-                resultDisplay.innerText = "GAMe WON!"
-                resultDisplay.style.display = "block";
-               //( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "";
-                isResultDisplayed = true;
-                stopTimer();
-                // is the below required to stop the function
-                return;
-        
-        } */
-    
-    
         }
 
-       
-//user clicks on cell
-    // if array [id of div clicked] === "mine"
-           
-            // show all hidden mines
-    //if  [id of div clicked] < noOfCols && [id of div clicked]+noOfCols === "mine"
-        //total++;
-    // bottom row: if [id of div clicked] > length of array 
-        //
-    // left column
-    // right column
-    // all other cell
-    
-
-    //console.log(cellClicked.currentTarget, cellType);
     
 };
-
-// END OF HANDLE CELL CLICKED
-/* const checkAdjacentCell = (currentCell: HTMLDivElement)=>{
-    const currentLocation:number = parseInt(currentCell.getAttribute("id") as string);
-    const gridEdge:number = currentLocation%noOfCols ;
-    const bottomRow: number = noOfRows * (noOfCols-1);
-    if(gridEdge!=0)
-} */
-// const bombValue = document.querySelector<HTMLInputElement>("#noOfBombs");
-// const levelSelected = document.querySelector<HTMLSelectElement>("#level");
-
-/* const updateBombValue = (event: Event) =>{
-    if(event.currentTarget === "beginner"){
-
-    }
-}; */
-
-//levelSelected?.addEventListener("select",updateBombValue);
-
-
-// let timer: number = 0;
-// let timerDisplay = document.querySelector<HTMLInputElement>("#timerBox");
-
-// const stopwatch=()=>{
-//     timer++;
-//     timerDisplay.value=timer;
-// }
-
-// let cells = document.querySelectorAll<HTMLDivElement>(".cell--row");
-
-// cells.forEach((cell) => {
-//     cell.addEventListener('click', displayTime);
-// });
-
-// const displayTime = (event:Event) =>{
-//     setInterval(stopwatch,1000);
-
-// }
-
-
-
-
-
-/* let cells = document.querySelectorAll<HTMLDivElement>(".cell--row");
-let restartBtn = document.querySelector<HTMLButtonElement>("#restartButton");
-
-let secs: number = 0;
-let mins: number = 0;
-let startTimer = false;
-
-cells.forEach((cell) => {
-    cell.addEventListener('click', checkTimer);
-});
-
-const checkTimer = () =>{
- if(startTimer === false){
-    startTimer = true;
-    setInterval(displayTime,1000);
- }   
-};
-
-const displayTime= ()=>{
- */
-//}
