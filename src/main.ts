@@ -139,8 +139,8 @@ const generateGameGrid = () =>{
     const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
     cells.forEach((cell)=>{
         cell.addEventListener('click', (cellClicked: Event) =>{
-
-            if(!isTimerOn) interval = setInterval(updateTime,1000);
+            
+            if(!isTimerOn && !isResultDisplayed) interval = setInterval(updateTime,1000);
             handleCellClicked(cellClicked.currentTarget as HTMLDivElement, cells);
         })
     })  
