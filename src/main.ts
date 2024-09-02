@@ -14,6 +14,9 @@ if(!container ){
 if(!resultDisplay){
     throw new Error ("Encountered issue locating the h3 element to display result");
 }
+if(!restartButton){
+    throw new Error ("Encountered issue locating the restart button element");
+}
 if(!level){
     throw new Error ("Encountered issue locating the element for level selection");
 }
@@ -32,8 +35,8 @@ let i: number=0;
 let isTimerOn = false;
 let isResultDisplayed = false;
 let noOfMines: number= 10;
-let noOfRows: number =8;
-let noOfCols: number =8;
+let noOfRows: number =9;
+let noOfCols: number =9;
 let noOfCells: number;
 let levelSelected: string = level.value;
 let secs: number | string = 0;
@@ -60,6 +63,9 @@ const generateGameGrid = () =>{
         resultDisplay.classList.remove("container__result--won");
         isResultDisplayed=false;
     }
+
+    // inter 16*16 - 40
+    // exp 24*24 - 99
 
     if(levelSelected == "beginner"){
         noOfRows = 8;
@@ -139,9 +145,26 @@ const generateGameGrid = () =>{
     const cells = document.querySelectorAll<HTMLDivElement>(".container__cell");
     cells.forEach((cell)=>{
         cell.addEventListener('click', (cellClicked: Event) =>{
-            
+           // console.log(cellClicked.)
             if(!isTimerOn && !isResultDisplayed) interval = setInterval(updateTime,1000);
             handleCellClicked(cellClicked.currentTarget as HTMLDivElement, cells);
+        })
+        cell.addEventListener('contextmenu',(event: Event)=>{
+            event.preventDefault();
+            if(!cell.classList.contains("container__cell--clicked")){
+                if (!cell.classList.contains("flag")) {
+                    cell.classList.add("flag");
+                    cell.innerText = "🚩";
+                    noOfMines--;
+
+                }else{
+                    cell.classList.remove("flag");
+                    cell.innerText = "";
+                    noOfMines++;
+                }
+                mineDisplay.value = noOfMines.toString();
+            }
+         
         })
     })  
 }
@@ -166,7 +189,7 @@ const updateTime = () =>{
 }
 
 
-restartButton?.addEventListener('click', ()=>{
+restartButton.addEventListener('click', ()=>{
     resetTimer();
     isTimerOn = false;
     ( document.querySelector("#restartButton")as HTMLButtonElement).innerText= "🙂";
@@ -225,11 +248,13 @@ const handleEmptyCellClicked = (cellClicked, cells) => {
 
 
 const handleCellClicked = (cellClicked: HTMLDivElement, cells: NodeListOf<HTMLDivElement>) =>{
+  //  console.log(cellClicked.)
 if(!isResultDisplayed){
         const isMineCell = cellClicked.className.includes("mine");
         const alreadyClicked = cellClicked.className.includes("container__cell--clicked");
+        const flaggedCell = cellClicked.className.includes("flag");
         let totalSafeCellClicked: number = 0;
-        if(!alreadyClicked){
+        if(!alreadyClicked && !flaggedCell){
 
             if(isMineCell){
                 
