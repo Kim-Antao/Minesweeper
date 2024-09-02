@@ -1,0 +1,26 @@
+.container{
+    
+    &__result{
+        display: none;
+        position: absolute;
+        top: 40%;
+        background-color: black;
+        width: 100vw;
+        left: 0;
+        text-align: center;
+        height: 10%;
+        align-content: center;
+    
+        &--lost{
+          display: block;
+          color: $danger-color;
+        }
+    
+        &--won{
+          display: block;
+          color: $success-color;
+        }
+    
+    }
+    
+}

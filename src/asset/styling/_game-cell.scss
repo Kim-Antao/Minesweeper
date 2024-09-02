@@ -1,0 +1,13 @@
+.container{
+    &__cell{
+        min-width: 25px;
+        height: 25px;
+        @include mixins.default-button;
+    
+        &--clicked{
+        color: $primary-color;
+        background-color:$lightgrey-background-color;
+        box-shadow: inset 1px 1px 1px black,inset -1px -1px 1px white;
+        }
+    }
+}
