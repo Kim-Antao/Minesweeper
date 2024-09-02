@@ -1,4 +1,7 @@
 import './style.css'
+// import './asset/data';
+import { displayHelp } from './asset/scripts/help';
+
 
 const container = document.querySelector<HTMLDivElement>('.container__game-grid');
 const resultDisplay = document.querySelector<HTMLHeadingElement>(".container__result");
@@ -6,7 +9,7 @@ const level = document.querySelector<HTMLSelectElement>('#level');
 const mineDisplay = document.querySelector<HTMLInputElement>('#noOfBombs');
 const restartButton = document.querySelector<HTMLButtonElement>("#restartButton");
 const TimeDisplay = document.querySelector<HTMLInputElement>("#timerBox");
-
+const helpButton = document.querySelector<HTMLButtonElement>(".container__help-button")
 
 if(!container ){
     throw new Error ("Encountered issue locating the main grid");
@@ -68,8 +71,8 @@ const generateGameGrid = () =>{
     // exp 24*24 - 99
 
     if(levelSelected == "beginner"){
-        noOfRows = 8;
-        noOfCols = 8;
+        noOfRows = 9;
+        noOfCols = 9;
         noOfMines = 10;
     }else if(levelSelected == "intermediate"){
         noOfRows = 12;
@@ -307,3 +310,5 @@ if(!isResultDisplayed){
 
     
 };
+
+helpButton?.addEventListener('click', displayHelp);
