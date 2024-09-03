@@ -1,0 +1,14 @@
+@use "mixins.scss";
+
+@include mixins.landscape-tablet{
+    .container{
+        gap: 5px;
+        &__cell{
+            min-width: 30px;
+            height: 30px;
+        }
+    }
+}
+
+
+
