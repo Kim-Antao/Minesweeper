@@ -1,0 +1,46 @@
+@import "colors.scss";
+@import "devices.scss";
+
+@mixin default-button{
+    background-color:$primary-color;
+    box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
+    cursor: pointer;
+    text-align: center;
+}
+
+@mixin xs-phone{
+    @media only screen and (min-width:$xxs){
+        @content;
+    }
+}
+
+@mixin phone{
+    @media only screen and (min-width:$xs){
+        @content;
+    }
+}
+
+@mixin landscape-phone{
+    @media only screen and (min-width:$sm){
+        @content;
+    }
+}
+
+@mixin tablet{
+    @media only screen and (min-width:$md){
+        @content;
+    }
+}
+
+@mixin landscape-tablet{
+    @media only screen and (min-width:$lg){
+        @content;
+    }
+}
+
+@mixin laptop{
+    @media only screen and (min-width:$xl){
+        @content;
+    }
+}
+
