@@ -1,11 +1,55 @@
-body {
+.container__cell {
+  min-width: 25px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.87);
+  box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
+  cursor: pointer;
+  text-align: center;
+}
+.container__cell--clicked {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: rgba(100, 100, 100, 0.87);
+  box-shadow: inset 1px 1px 1px black, inset -1px -1px 1px white;
+}
+
+.container__result {
+  display: none;
+  position: absolute;
+  top: 40%;
+  background-color: black;
   width: 100vw;
+  left: 0;
+  text-align: center;
+  height: 10%;
+  align-content: center;
+}
+.container__result--lost {
+  display: block;
+  color: rgb(219, 2, 2);
+}
+.container__result--won {
+  display: block;
+  color: rgb(57, 188, 5);
+}
+
+@media only screen and (min-width: 1200px) {
+  .container {
+    gap: 5px;
+  }
+  .container__cell {
+    min-width: 30px;
+    height: 30px;
+  }
+}
+body {
+  max-width: 100vw;
   height: 100vh;
   font-family: "Nippo", sans-serif;
+  margin: 0%;
 }
 
 .game-heading {
-  margin-top: 10%;
+  margin-top: 3em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,14 +61,11 @@ body {
 
 .container {
   margin: auto;
-  width: 70vw;
   padding: 10px;
   background-color: rgba(41, 41, 41, 0.8509803922);
   box-shadow: 0px 0px 12px 2px black;
   font-size: 1em;
-  /*   &__result:active{
-      animation: fade-in 1s;
-    } */
+  width: max-content;
 }
 .container__nav {
   display: flex;
@@ -40,11 +81,19 @@ body {
   font-family: "Nippo", sans-serif;
   font-size: 1em;
 }
+.container__help-info {
+  display: none;
+  background-color: rgb(88, 87, 87);
+  position: absolute;
+  width: 240px;
+  top: 12rem;
+  padding: 12px;
+}
 .container__display-box {
   text-align: center;
   font-size: 1em;
   font-family: "Nippo", sans-serif;
-  width: 20vw;
+  width: 5em;
   box-shadow: inset 0px 0px rgba(0, 0, 0, 0.8);
 }
 .container__restart-button {
@@ -57,44 +106,22 @@ body {
 .container__game-grid {
   display: grid;
   grid-template-columns: repeat(var(--noOfCols), 1fr);
-  gap: 5px;
-}
-.container__cell {
-  height: 30px;
-  background-color: rgba(255, 255, 255, 0.87);
-  box-shadow: inset 2px 2px 2px white, inset -2px -2px 2px black;
-  cursor: pointer;
-  text-align: center;
-}
-.container__cell--clicked {
-  color: rgba(255, 255, 255, 0.87);
-  background-color: rgba(100, 100, 100, 0.87);
-  box-shadow: inset 1px 1px 1px black, inset -1px -1px 1px white;
-}
-.container__result {
-  display: none;
-  position: absolute;
-  top: 40%;
-  background-color: black;
-  width: 100vw;
-  left: 0;
-  text-align: center;
-  height: 10%;
-  align-content: center;
-}
-.container__result--lost {
-  display: block;
-  color: red;
-}
-.container__result--won {
-  display: block;
-  color: green;
+  gap: 4px;
 }
 
 #level {
   font-family: "Nippo", sans-serif;
 }
 
+@media only screen and (min-width: 1200px) {
+  .container {
+    gap: 5px;
+  }
+  .container__cell {
+    min-width: 30px;
+    height: 30px;
+  }
+}
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
