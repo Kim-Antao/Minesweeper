@@ -10,6 +10,8 @@ The styling to kept to minimum to give a feel of the original minesweeper game.
 Since this is my first project as a TS developer any inputs on optimising the code will be greatly appreciated. Please pop it in the issues tab.
 Use the link below to checkout the live game.
 
+https://kim-antao.github.io/Minesweeper/
+
 Enjoy!
 
 _P.S. if you have never played minesweeper before, there is a help button added to the game._
