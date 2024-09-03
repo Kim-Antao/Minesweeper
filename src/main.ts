@@ -108,11 +108,6 @@ const generateGameGrid = () =>{
         let minesAdjacent: number =0;
         const cell = document.getElementById(i.toString()) as HTMLDivElement;
     
-        if(cell.classList.contains("mine")){
-           // cell.style.backgroundColor ="red";
-           cell.innerText ="M";
-        } 
-    
         if(cell.classList.contains("safe")){
             const gridEdge:number = i%noOfCols ;
             const bottomRow: number = noOfRows * (noOfCols-1);
